@@ -19,10 +19,20 @@ file = st.file_uploader('', type=['jpeg', 'jpg', 'png'])
 # load classifier
 model = load_model('./model/Skin_Cancer.h5')
 
-# load class names from updated labels.txt
-with open('./model/labels.txt', 'r') as f:
-    class_names = [a.strip().split(' ', 1)[1] for a in f.readlines()]
-    f.close()
+# Initialize class_names as an empty list
+class_names = []
+
+# Load class names from updated labels.txt with error handling
+try:
+    with open('./model/labels.txt', 'r') as f:
+        for line in f.readlines():
+            parts = line.strip().split(' ', 1)
+            if len(parts) == 2:
+                class_names.append(parts[1])
+except FileNotFoundError:
+    st.error("Error: 'labels.txt' file not found.")
+except Exception as e:
+    st.error(f"An error occurred while reading 'labels.txt': {str(e)}")
 
 # display image
 if file is not None:
