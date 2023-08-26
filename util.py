@@ -49,7 +49,7 @@ def classify(image, model, class_names):
     image_array = np.asarray(image)
 
     # normalize image
-    normalized_image_array = (image_array.astype(np.float32) / 127.5) - 1
+    normalized_image_array = (image_array.astype(np.float32) / 255.0) - 1
 
     # set model input
     data = np.ndarray(shape=(1, 28, 28, 3), dtype=np.float32)
