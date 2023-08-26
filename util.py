@@ -101,4 +101,4 @@ def classify(image, model, class_names):
     # # class_name = class_names[index]
     # confidence_score = prediction[0][index]
 
-    return class_name, 8
+    return class_name, max_prob
