@@ -44,6 +44,7 @@ def classify(image, model, class_names):
     """
     # convert image to (164, 164)
     image = ImageOps.fit(image, (28, 28), Image.Resampling.LANCZOS)
+    print("image", image)
 
     # convert image to numpy array
     image_array = np.asarray(image)
