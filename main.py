@@ -17,7 +17,7 @@ st.header('Please upload a sample image for detection')
 file = st.file_uploader('', type=['jpeg', 'jpg', 'png'])
 
 # load classifier
-model = load_model('./model/chest.h5')
+model = load_model('./model/Skin_Cancer.h5')
 
 # load class names from updated labels.txt
 with open('./model/labels.txt', 'r') as f:
