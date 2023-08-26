@@ -43,7 +43,7 @@ def classify(image, model, class_names):
         A tuple of the predicted class name and the confidence score for that prediction.
     """
     # convert image to (164, 164)
-    image = ImageOps.fit(image, (164, 164), Image.Resampling.LANCZOS)
+    image = ImageOps.fit(image, (28, 28), Image.Resampling.LANCZOS)
 
     # convert image to numpy array
     image_array = np.asarray(image)
@@ -52,7 +52,7 @@ def classify(image, model, class_names):
     normalized_image_array = (image_array.astype(np.float32) / 127.5) - 1
 
     # set model input
-    data = np.ndarray(shape=(1, 164, 164, 3), dtype=np.float32)
+    data = np.ndarray(shape=(1, 28, 28, 3), dtype=np.float32)
     data[0] = normalized_image_array
 
     # make prediction
