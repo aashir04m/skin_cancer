@@ -2,6 +2,7 @@ import streamlit as st
 from keras.models import load_model
 from PIL import Image
 import numpy as np
+import cv2
 
 from util import classify, set_background
 
@@ -36,7 +37,8 @@ except Exception as e:
 
 # display image
 if file is not None:
-    image = Image.open(file).convert('RGB')
+    # image = Image.open(file).convert('RGB')
+    image = cv2.imread(file)
     st.image(image, use_column_width=True)
 
     # classify image
