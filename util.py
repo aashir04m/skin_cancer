@@ -3,7 +3,6 @@ import base64
 import streamlit as st
 from PIL import ImageOps, Image
 import numpy as np
-import cv2
 
 
 def set_background(image_file):
@@ -44,43 +43,33 @@ def classify(image, model, class_names):
         A tuple of the predicted class name and the confidence score for that prediction.
     """
     # convert image to (164, 164)
-    # image = ImageOps.fit(image, (28, 28), Image.Resampling.LANCZOS)
-    # print("image", image)
+    image = ImageOps.fit(image, (28, 28), Image.Resampling.LANCZOS)
 
-    # # convert image to numpy array
-    # image_array = np.asarray(image)
+    # convert image to numpy array
+    image_array = np.asarray(image)
 
-    # # normalize image
-    # normalized_image_array = (image_array.astype(np.float32) / 255.0) - 1
-
-    image = cv2.resize(image, (28, 28))
-    
-    prediction = model.predict(image.reshape(1, 28, 28, 3))
-                                             
-    max_prob = max(result[0])
-
-    class_ind = list(result[0]).index(max_prob)
-    print ("class ind",class_ind)
-    class_name = classes[class_ind]                                         
+    # normalize image
+    image_array = image_array[:, :, ::-1].copy()
+    normalized_image_array = (image_array.astype(np.float32) / 255.0) - 1
 
     # set model input
-    # data = np.ndarray(shape=(1, 28, 28, 3), dtype=np.float32)
-    # data[0] = normalized_image_array
+    data = np.ndarray(shape=(1, 28, 28, 3), dtype=np.float32)
+    data[0] = image_array
 
-    # # make prediction
-    # prediction = model.predict(data)
-    # print("prediction", prediction)
-    # index = np.argmax(prediction)
-    # print("index", index)
-    # class_name = 0 if prediction[0][0] > 0.95 else 1
+    # make prediction
+    prediction = model.predict(data)
+    print("prediction", prediction)
+    index = np.argmax(prediction)
+    print("index", index)
+    class_name = 0 if prediction[0][0] > 0.95 else 1
 
-    # class_name = "PNEUMONIA" if class_name == 0 else "NORMAL"
+    class_name = "PNEUMONIA" if class_name == 0 else "NORMAL"
 
     # if class_name == 0:
     #     class_name = "PNEUMONIA"
     # else:
     #     class_name = "NORMAL"
     # class_name = class_names[index]
-    confidence_score = prediction[0][0]
+    confidence_score = prediction[0][index]
 
     return class_name, confidence_score
