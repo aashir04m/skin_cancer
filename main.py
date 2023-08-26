@@ -8,7 +8,7 @@ from util import classify, set_background
 set_background('./bgs/Untitled design.png')
 
 # set title
-st.title('Pneumonia Detection')
+st.title('Skin Cancer Detection')
 
 # set header
 st.header('Please upload a sample image for detection')
