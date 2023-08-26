@@ -5,7 +5,6 @@ import numpy as np
 
 from util import classify, set_background
 
-
 set_background('./bgs/bg.png')
 
 # set title
@@ -18,11 +17,11 @@ st.header('Please upload a sample image for detection')
 file = st.file_uploader('', type=['jpeg', 'jpg', 'png'])
 
 # load classifier
-model = load_model('./model/Skin_Cancer.h5')
+model = load_model('./model/chest.h5')
 
-# load class names
+# load class names from updated labels.txt
 with open('./model/labels.txt', 'r') as f:
-    class_names = [a[:-1].split(' ')[1] for a in f.readlines()]
+    class_names = [a.strip().split(' ', 1)[1] for a in f.readlines()]
     f.close()
 
 # display image

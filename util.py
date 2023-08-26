@@ -1,34 +1,3 @@
-import base64
-
-import streamlit as st
-from PIL import ImageOps, Image
-import numpy as np
-
-
-def set_background(image_file):
-    """
-    This function sets the background of a Streamlit app to an image specified by the given image file.
-
-    Parameters:
-        image_file (str): The path to the image file to be used as the background.
-
-    Returns:
-        None
-    """
-    with open(image_file, "rb") as f:
-        img_data = f.read()
-    b64_encoded = base64.b64encode(img_data).decode()
-    style = f"""
-        <style>
-        .stApp {{
-            background-image: url(data:image/png;base64,{b64_encoded});
-            background-size: cover;
-        }}
-        </style>
-    """
-    st.markdown(style, unsafe_allow_html=True)
-
-
 def classify(image, model, class_names):
     """
     This function takes an image, a model, and a list of class names and returns the predicted class and confidence
@@ -42,33 +11,29 @@ def classify(image, model, class_names):
     Returns:
         A tuple of the predicted class name and the confidence score for that prediction.
     """
-    # convert image to (164, 164)
+    # Resize the input image to (164, 164) using Lanczos resampling
     image = ImageOps.fit(image, (164, 164), Image.Resampling.LANCZOS)
 
-    # convert image to numpy array
+    # Convert the resized image to a NumPy array
     image_array = np.asarray(image)
 
-    # normalize image
+    # Normalize image pixel values to fall within the range [-1, 1]
     normalized_image_array = (image_array.astype(np.float32) / 127.5) - 1
 
-    # set model input
+    # Set model input
     data = np.ndarray(shape=(1, 164, 164, 3), dtype=np.float32)
     data[0] = normalized_image_array
 
-    # make prediction
+    # Make prediction
     prediction = model.predict(data)
-    print("prediction", prediction)
+
+    # Determine the predicted class index
     index = np.argmax(prediction)
-    print("index", index)
-    class_name = 0 if prediction[0][0] > 0.95 else 1
 
-    class_name = "PNEUMONIA" if class_name == 0 else "NORMAL"
+    # Get the predicted class name based on class_names list
+    class_name = class_names[index]
 
-    # if class_name == 0:
-    #     class_name = "PNEUMONIA"
-    # else:
-    #     class_name = "NORMAL"
-    # class_name = class_names[index]
+    # Get the confidence score for the predicted class
     confidence_score = prediction[0][index]
 
     return class_name, confidence_score
