@@ -5,10 +5,11 @@ import numpy as np
 
 from util import classify, set_background
 
-set_background('./bgs/Untitled design.png')
+
+set_background('./bgs/bg.png')
 
 # set title
-st.title('Skin Cancer Detection')
+st.title('Pneumonia Detection')
 
 # set header
 st.header('Please upload a sample image for detection')
@@ -17,22 +18,12 @@ st.header('Please upload a sample image for detection')
 file = st.file_uploader('', type=['jpeg', 'jpg', 'png'])
 
 # load classifier
-model = load_model('./model/Skin_Cancer.h5')
+model = load_model('./model/chest.h5')
 
-# Initialize class_names as an empty list
-class_names = []
-
-# Load class names from updated labels.txt with error handling
-try:
-    with open('./model/labels.txt', 'r') as f:
-        for line in f.readlines():
-            parts = line.strip().split(' ', 1)
-            if len(parts) == 2:
-                class_names.append(parts[1])
-except FileNotFoundError:
-    st.error("Error: 'labels.txt' file not found.")
-except Exception as e:
-    st.error(f"An error occurred while reading 'labels.txt': {str(e)}")
+# load class names
+with open('./model/labels.txt', 'r') as f:
+    class_names = [a[:-1].split(' ')[1] for a in f.readlines()]
+    f.close()
 
 # display image
 if file is not None:
